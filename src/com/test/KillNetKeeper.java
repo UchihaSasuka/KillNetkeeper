@@ -14,43 +14,10 @@ public class KillNetKeeper{
     private static final String OUTPUT_FILE_PATH = "C:\\Users\\Administrator.O3N4E19WTVWX6C1\\Desktop\\useless\\killnetkeeper.bat";
     private static final String WIFI_EXE = "D:\\Program Files\\wifi\\kwifi\\mywifi";
     private static final Long TIME = 10 * 1000l;  ///10秒钟
-    //获取进程信息
-    public List<String> Tasklist()
-    {
-        List<String> list=new ArrayList<String>();
-        try
-        {
-            Process process = Runtime.getRuntime().exec("tasklist");
-            BufferedReader reader= new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while(reader.read() != -1){
-                String p=reader.readLine();
-                System.out.println(p);
-                list.add(p);
-            }
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-        return list;
-    }
-
-
-    public Set<String> rtTasklist(List<String> list)
-    {
-        Set<String> array = new HashSet<>();
-        for(int i=0;i<list.size();i++)
-        {
-            if(list.get(i).indexOf(" ") > 0){
-                array.add(list.get(i).substring(0, list.get(i).indexOf(" ")));
-            }
-        }
-        return array;
-    }
 
     //获取进程名
-    public static String getName(String fileName){
-        File file = new File("C:\\Program Files (x86)\\NetKeeper\\run\\C6516439-5E45-4ABF-9D1A-87556AC3184F");
+    public static String getName(String filePath){
+        File file = new File(filePath);
         if(file.exists()){
             File[] files = file.listFiles();
             for(File file1 : files){
