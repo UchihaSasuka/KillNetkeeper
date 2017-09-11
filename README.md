@@ -1,0 +1,1 @@
+自动寻找netkepper进程名，并将其写入bat文件，再开启猎豹wifi，完成半自动wifi开启
