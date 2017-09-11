@@ -1,7 +1,8 @@
 package com.test;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,14 @@ public class KillNetKeeper{
     private static final String OUTPUT_FILE_PATH = "C:\\Users\\Administrator.O3N4E19WTVWX6C1\\Desktop\\useless\\killnetkeeper.bat";
     private static final String WIFI_EXE = "D:\\Program Files\\wifi\\kwifi\\mywifi";
     private static final Long TIME = 10 * 1000l;  ///10秒钟
+    private static final String BAT_PATH = "C:\\Users\\Administrator.O3N4E19WTVWX6C1\\Desktop\\useless\\killnetkeeper.bat";
+    private static final String EXEBAR_COMMOND_PREFIX = "cmd /c start ";
+    private static final String PRETREATEMENT = "%1 %2\n" +
+            "ver|find \"5.\">nul&&goto :st\n" +
+            "mshta vbscript:createobject(\"shell.application\").shellexecute(\"%~s0\",\"goto :st\",\"\",\"runas\",1)(window.close)&goto :eof\n" +
+            " \n" +
+            ":st\n" +
+            "copy \"%~0\" \"%windir%\\system32\"\n";
 
     //获取进程名
     public static String getName(String filePath){
@@ -43,18 +52,32 @@ public class KillNetKeeper{
     public static void output(String content) throws IOException {
         File file = new File(OUTPUT_FILE_PATH);
         FileWriter writer = new FileWriter(file);
-        writer.write(content);
+        writer.write(PRETREATEMENT + content);
         writer.flush();
         writer.close();
+    }
+
+    //关闭cmd
+    public static void killProcess(){
+        Runtime rt = Runtime.getRuntime();
+        try {
+            rt.exec("cmd.exe /C start wmic process where name='cmd.exe' call terminate");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //结束进程
     public static void main(String[] args) throws IOException, InterruptedException {
         String processName = getName(FILE_PATH);
+        Runtime runtime = Runtime.getRuntime();
         if(processName != null){
             String commond = COMMOND_PREFIX + processName;
+            String commond2 = EXEBAR_COMMOND_PREFIX + BAT_PATH;
             output(commond);
-            Thread.sleep(TIME);
+            runtime.exec(commond2);
+            killProcess();
+           // Thread.sleep(TIME);
             Runtime.getRuntime().exec(WIFI_EXE);
         }
 
